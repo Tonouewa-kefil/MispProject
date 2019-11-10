@@ -8,12 +8,12 @@
 	.data
 	
 	X: .asciiz "x = "
-	NewLine: .ascii "\n"
-	
+	NewLine: .asciiz "\n"
+	x: .byte 100
 	.text
 	
-	main:	
-		li $a1,100       #Setting a1 to 100 (int x=100)
+	main:	la $t0,x	 #Setting $t0 to the memory address to x
+		lb $a1,($t0)     #Setting a1 to 100 (int x=100)
 		li $t0,0         #setting to to 0   (int j=0)
 	loop: 	beq $t0,10,exit  #comparring j to 10 and exiting if it is equal (j<10)
 		

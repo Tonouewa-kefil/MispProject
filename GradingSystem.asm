@@ -10,13 +10,13 @@
 	D: .asciiz "D(60-69) -----> "
 	F: .asciiz "F(0-60)  -----> "
 	newline: .asciiz "\n"
-	Grades: .space 100
+	Grades: .byte 100 50 78 90 66 78 63 10 98 76 45 49 76 80 88
 	A_students: .byte 0
 	B_students: .byte 0
 	C_students: .byte 0
 	D_students: .byte 0
 	F_students: .byte 0
-	Num_of_students: .space 1
+	Num_of_students: .byte 15
 	Average: .space 1 
 	
 	    
@@ -25,43 +25,11 @@
 	
 	 main:
 	 
-	 #ask the user to enter the number of students
-	 li $v0,4
-	 la $a0, User_input
-	 syscall
-	 
-	 #waiting fo the user input
-	 li $v0,5
-	 syscall 
-	 
-	 sb $v0,Num_of_students 	#Storing user input into Num_of_students
-	 la $t1,Num_of_students
-	 lb $t1,($t1)
-	 li $t2,0
-	 bgt $t1,0,GradesLoop
-	 ble $t1,0,exit
-	 
-	 
-	 GradesLoop: 	li $v0,4
-			la $a0, User_grade_input
-	 		syscall
-	 		
-	 		#waiting fo the user input
-			li $v0,5
-	 		syscall 
-	 		
-	 		#store the user value into the grades array
-	 		
-	 		sb $v0,Grades($t2)
-	 		addi $t2,$t2,1
-	 		
-	 		subi $t1,$t1,1
-	 		bne $t1,0,GradesLoop
-
-			la $t1,Num_of_students
-	 		lb $t1,($t1)
-	 		li $t4,0
-	 		li $t5,0
+	li $t5,0
+	li $t5,0
+	li $t4,0
+	la $t1,Num_of_students
+	lb $t1,($t1)
 	 	
 AverageCalculation:	#add all the element of the array and divide it by the number of students in the class.
 			#summation portion
@@ -98,8 +66,8 @@ Print_Average:		li $v0,4
 Repartition:		la $t3,Grades($t5)
 			lb $t3,($t3)
 			bgt $t3,60,D_Grade
-			#b D_Grade
-	 		
+			
+			#This secion in used to determine which student has F.
 	F_Grade:	la $t2,F_students
 			lb $t2,($t2)
 			addi $t2,$t2,1
@@ -109,6 +77,7 @@ Repartition:		la $t3,Grades($t5)
 			bne $t1,0,Repartition		
 	 		b Statistics
 	 
+	 		#This section is used to determine which students has D.
 	 D_Grade:	bgt $t3,69,C_Grade
 	 		la $t2,D_students
 			lb $t2,($t2)
@@ -119,6 +88,7 @@ Repartition:		la $t3,Grades($t5)
 			bne $t1,0,Repartition
 			b Statistics
 	
+			#This section is used to determine which students has C.
 	C_Grade:	bgt $t3,79,B_Grade
 	 		la $t2,C_students
 			lb $t2,($t2)
@@ -128,7 +98,8 @@ Repartition:		la $t3,Grades($t5)
 			subi $t1,$t1,1
 			bne $t1,0,Repartition
 			b Statistics
-	
+			
+			#This section is used to determine which students has B
 	B_Grade:	bgt $t3,89,A_Grade
 	 		la $t2,B_students
 			lb $t2,($t2)
@@ -138,7 +109,8 @@ Repartition:		la $t3,Grades($t5)
 			subi $t1,$t1,1
 			bne $t1,0,Repartition
 			b Statistics
-	
+			
+			#This section is used to determine which students has A
 	A_Grade:	la $t2,A_students
 			lb $t2,($t2)
 			addi $t2,$t2,1
@@ -157,7 +129,7 @@ Statistics:		li $v0,4
 			la $a0,newline
 	 		syscall
 			
-			#A students
+			#A students number printing process
 			li $v0,4
 			la $a0,A
 	 		syscall
@@ -170,7 +142,7 @@ Statistics:		li $v0,4
 			la $a0,newline
 	 		syscall
 	 		
-	 		#B students
+	 		#B students number printing process
 			li $v0,4
 			la $a0,B
 	 		syscall
@@ -183,7 +155,7 @@ Statistics:		li $v0,4
 			la $a0,newline
 	 		syscall
 	 		
-	 		#C students
+	 		#C students number printing process
 			li $v0,4
 			la $a0,C
 	 		syscall
@@ -196,7 +168,7 @@ Statistics:		li $v0,4
 			la $a0,newline
 	 		syscall
 	 		
-	 		#D students
+	 		#D students number printing process
 			li $v0,4
 			la $a0,D
 	 		syscall
@@ -209,7 +181,7 @@ Statistics:		li $v0,4
 			la $a0,newline
 	 		syscall
 	 		
-	 		#F students
+	 		#F student number printing process
 			li $v0,4
 			la $a0,F
 	 		syscall

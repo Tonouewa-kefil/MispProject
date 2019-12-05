@@ -1,4 +1,4 @@
-	.data
+.data
 	
 	User_input: .asciiz "Enter the number of students in the class: "
 	Average_disp: .asciiz "The class average is: "
@@ -17,7 +17,7 @@
 	D_students: .byte 0
 	F_students: .byte 0
 	Num_of_students: .space 1
-	Average: .space 2 
+	Average: .space 1 
 	
 	    
 	   
@@ -61,14 +61,14 @@
 			la $t1,Num_of_students
 	 		lb $t1,($t1)
 	 		li $t4,0
-	 		li $t2,0
+	 		li $t5,0
 	 	
 AverageCalculation:	#add all the element of the array and divide it by the number of students in the class.
 			#summation portion
 			
-			la $t3,Grades($t2)
+			la $t3,Grades($t5)
 			lb $t3,($t3)
-			addi $t2,$t2,1
+			addi $t5,$t5,1
 			add $t4,$t4,$t3
 			
 			subi $t1,$t1,1
@@ -79,29 +79,32 @@ AverageCalculation:	#add all the element of the array and divide it by the numbe
 	 		lb $t1,($t1)
 	 		div $t4,$t1
 	 		mflo $t3
-	 		sb $t3,Average
+	 		sb  $t3,Average
+	 		
 
 Print_Average:		li $v0,4
 			la $a0, Average_disp
 	 		syscall
 	 		
-	 		li $0,1
-			la $a0,Average
+	 		li $v0,1
+			lb $a0,Average
 	 		syscall
 	 		li $t2,0
 
 	 		la $t1,Num_of_students
 			lb $t1,($t1)
-Repartition:		la $t3,Grades($t2)
+			li $t5,0
+			
+Repartition:		la $t3,Grades($t5)
 			lb $t3,($t3)
-			blt $t3,60,F_Grade
-			b D_Grade
+			bgt $t3,60,D_Grade
+			#b D_Grade
 	 		
 	F_Grade:	la $t2,F_students
 			lb $t2,($t2)
 			addi $t2,$t2,1
 			sb $t2,F_students
-			addi $t2,$t2,1
+			addi $t5,$t5,1
 			subi $t1,$t1,1
 			bne $t1,0,Repartition		
 	 		b Statistics
@@ -111,7 +114,7 @@ Repartition:		la $t3,Grades($t2)
 			lb $t2,($t2)
 			addi $t2,$t2,1
 			sb $t2,D_students
-			addi $t2,$t2,1
+			addi $t5,$t5,1
 			subi $t1,$t1,1
 			bne $t1,0,Repartition
 			b Statistics
@@ -121,7 +124,7 @@ Repartition:		la $t3,Grades($t2)
 			lb $t2,($t2)
 			addi $t2,$t2,1
 			sb $t2,C_students
-			addi $t2,$t2,1
+			addi $t5,$t5,1
 			subi $t1,$t1,1
 			bne $t1,0,Repartition
 			b Statistics
@@ -131,7 +134,7 @@ Repartition:		la $t3,Grades($t2)
 			lb $t2,($t2)
 			addi $t2,$t2,1
 			sb $t2,B_students
-			addi $t2,$t2,1
+			addi $t5,$t5,1
 			subi $t1,$t1,1
 			bne $t1,0,Repartition
 			b Statistics
@@ -140,7 +143,7 @@ Repartition:		la $t3,Grades($t2)
 			lb $t2,($t2)
 			addi $t2,$t2,1
 			sb $t2,A_students
-			addi $t2,$t2,1
+			addi $t5,$t5,1
 			subi $t1,$t1,1
 			bne $t1,0,Repartition
 			b Statistics
@@ -159,8 +162,8 @@ Statistics:		li $v0,4
 			la $a0,A
 	 		syscall
 	 		
-	 		li $0,1
-			la $a0,A_students
+	 		li $v0,1
+			lb $a0,A_students
 	 		syscall
 	 		
 	 		li $v0,4
@@ -172,8 +175,8 @@ Statistics:		li $v0,4
 			la $a0,B
 	 		syscall
 	 		
-	 		li $0,1
-			la $a0,B_students
+	 		li $v0,1
+			lb $a0,B_students
 	 		syscall
 	 		
 	 		li $v0,4
@@ -185,8 +188,8 @@ Statistics:		li $v0,4
 			la $a0,C
 	 		syscall
 	 		
-	 		li $0,1
-			la $a0,C_students
+	 		li $v0,1
+			lb $a0,C_students
 	 		syscall
 	 		
 	 		li $v0,4
@@ -198,8 +201,8 @@ Statistics:		li $v0,4
 			la $a0,D
 	 		syscall
 	 		
-	 		li $0,1
-			la $a0,D_students
+	 		li $v0,1
+			lb $a0,D_students
 	 		syscall
 	 		
 	 		li $v0,4
@@ -211,8 +214,8 @@ Statistics:		li $v0,4
 			la $a0,F
 	 		syscall
 	 		
-	 		li $0,1
-			la $a0,F_students
+	 		li $v0,1
+			lb $a0,F_students
 	 		syscall
 	 		
 	 		li $v0,4
